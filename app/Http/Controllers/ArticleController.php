@@ -10,34 +10,68 @@ use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with(['author', 'categories'])->published()->latest()->paginate(10);
-        return view('articles.index', compact('articles'));
+        $categories = Category::all();
+        $query = Article::with(['author', 'categories'])->published();
+
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('categories.id', $request->category);
+            });
+        }
+
+        $articles = $query->latest()->paginate(10);
+        $articles->appends($request->only('category'));
+
+        return view('articles.index', compact('articles', 'categories'));
     }
 
     public function search(Request $request)
     {
         $query = $request->input('q');
+        $categoryId = $request->input('category');
+        $categories = Category::all();
 
-        $articles = Article::with(['author', 'categories'])
+        $articlesQuery = Article::with(['author', 'categories'])
             ->published()
             ->where(function($q) use ($query) {
                 $q->where('title', 'like', "%{$query}%")
                   ->orWhere('content', 'like', "%{$query}%");
-            })
-            ->latest()
-            ->paginate(10);
+            });
 
-        $articles->appends(['q' => $query]);
+        if ($categoryId) {
+            $articlesQuery->whereHas('categories', function ($q) use ($categoryId) {
+                $q->where('categories.id', $categoryId);
+            });
+        }
 
-        return view('articles.index', compact('articles'));
+        $articles = $articlesQuery->latest()->paginate(10);
+
+        $articles->appends(['q' => $query, 'category' => $categoryId]);
+
+        return view('articles.index', compact('articles', 'categories'));
     }
 
-    public function myArticles()
+    public function myArticles(Request $request)
     {
-        $articles = Article::where('author_id', Auth::id())->latest()->paginate(10);
-        return view('articles.my_articles', compact('articles'));
+        $categories = Category::all();
+        $query = Article::where('author_id', Auth::id());
+
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('categories.id', $request->category);
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $articles = $query->latest()->paginate(10);
+        $articles->appends($request->only(['category', 'status']));
+
+        return view('articles.my_articles', compact('articles', 'categories'));
     }
 
     public function create()

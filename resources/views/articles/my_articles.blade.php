@@ -7,6 +7,25 @@
         <a href="{{ route('articles.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create New Article</a>
     </div>
 
+    <div class="mb-6">
+        <form action="{{ route('articles.my_articles') }}" method="GET" class="flex gap-4">
+            <select name="category" onchange="this.form.submit()" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+                <option value="">All Categories</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <select name="status" onchange="this.form.submit()" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+                <option value="">All Statuses</option>
+                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+            </select>
+        </form>
+    </div>
+
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white">
             <thead>

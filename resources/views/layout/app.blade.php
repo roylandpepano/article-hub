@@ -15,7 +15,6 @@
                     @auth
                         <span class="text-gray-600 mr-4">Welcome, {{ auth()->user()->name }}</span>
                         <a href="{{ route('articles.my_articles') }}" class="text-gray-600 hover:text-gray-800 mr-4">My Articles</a>
-                        <a href="{{ route('articles.create') }}" class="text-blue-600 hover:text-blue-800 mr-4">Create Article</a>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
                             <button type="submit" class="text-red-600 hover:text-red-800">Logout</button>

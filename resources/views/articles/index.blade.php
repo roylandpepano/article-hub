@@ -7,6 +7,14 @@
 
         <div class="flex gap-4 items-center">
             <form action="{{ route('articles.search') }}" method="GET" class="flex gap-2">
+                <select name="category" onchange="this.form.submit()" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+                    <option value="">All Categories</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
                 <input type="text" name="q" placeholder="Search articles..." value="{{ request('q') }}" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
                 <button type="submit" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Search</button>
             </form>
