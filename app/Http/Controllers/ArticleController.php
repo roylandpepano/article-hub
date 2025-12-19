@@ -16,6 +16,24 @@ class ArticleController extends Controller
         return view('articles.index', compact('articles'));
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+
+        $articles = Article::with(['author', 'categories'])
+            ->published()
+            ->where(function($q) use ($query) {
+                $q->where('title', 'like', "%{$query}%")
+                  ->orWhere('content', 'like', "%{$query}%");
+            })
+            ->latest()
+            ->paginate(10);
+
+        $articles->appends(['q' => $query]);
+
+        return view('articles.index', compact('articles'));
+    }
+
     public function myArticles()
     {
         $articles = Article::where('author_id', Auth::id())->latest()->paginate(10);

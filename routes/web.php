@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
 });
 
+// Public Article Search Route
+Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
+
 // Public Article Show Route (Must be after create to avoid conflict)
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
 

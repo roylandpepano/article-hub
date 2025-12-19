@@ -4,9 +4,17 @@
 <div class="bg-white p-6 rounded shadow">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">Articles</h1>
-        @auth
-            <a href="{{ route('articles.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create New Article</a>
-        @endauth
+
+        <div class="flex gap-4 items-center">
+            <form action="{{ route('articles.search') }}" method="GET" class="flex gap-2">
+                <input type="text" name="q" placeholder="Search articles..." value="{{ request('q') }}" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+                <button type="submit" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Search</button>
+            </form>
+
+            @auth
+                <a href="{{ route('articles.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create New Article</a>
+            @endauth
+        </div>
     </div>
 
     <div class="grid gap-6">
@@ -46,6 +54,10 @@
         @if($articles->isEmpty())
             <p class="text-gray-500">No articles found.</p>
         @endif
+    </div>
+
+    <div class="mt-6">
+        {{ $articles->links() }}
     </div>
 </div>
 @endsection
