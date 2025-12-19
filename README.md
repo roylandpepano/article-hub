@@ -2,6 +2,8 @@
 
 Article Hub is a modern, full-featured article management system built with **Laravel 12** and **Tailwind CSS 4**. It provides a robust platform for users to publish, manage, and categorize articles, complete with a RESTful API.
 
+![Article Hub Homepage](public/screenshots/homepage.png)
+
 > **Note:** This application was created as a technical exam and was completed in approximately 2.5 hours.
 
 ## 🚀 Features
@@ -27,7 +29,7 @@ Article Hub is a modern, full-featured article management system built with **La
 
 ## ⚠️ Known Limitations
 
-Due to the time constraint (2.5 hours), the following features were omitted or simplified:
+Due to the time and instructions constraint, the following features were omitted or simplified:
 - **Image Uploads**: Articles currently support text content only. No image hosting or upload functionality is implemented.
 - **Advanced Search**: Search functionality uses basic SQL `LIKE` queries. Full-text search (e.g., via Scout/Meilisearch) is not implemented.
 - **Role-Based Access Control (RBAC)**: There is no "Admin" role. Users can only manage their own articles.
