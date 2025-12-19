@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -11,13 +12,20 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::with('author')->latest()->get();
+        $articles = Article::with(['author', 'categories'])->published()->latest()->paginate(10);
         return view('articles.index', compact('articles'));
+    }
+
+    public function myArticles()
+    {
+        $articles = Article::where('author_id', Auth::id())->latest()->paginate(10);
+        return view('articles.my_articles', compact('articles'));
     }
 
     public function create()
     {
-        return view('articles.create');
+        $categories = Category::all();
+        return view('articles.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -25,17 +33,30 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'status' => 'required|in:draft,published',
+            'category_ids' => 'array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
 
-        Article::create([
+        $article = Article::create([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'content' => $request->content,
             'author_id' => Auth::id(),
-            'status' => 'published',
+            'status' => $request->status,
         ]);
 
+        if ($request->has('category_ids')) {
+            $article->categories()->attach($request->category_ids);
+        }
+
         return redirect()->route('articles.index')->with('success', 'Article created successfully.');
+    }
+
+    public function show(Article $article)
+    {
+        $article->load('author', 'categories');
+        return view('articles.show', compact('article'));
     }
 
     public function edit(Article $article)
@@ -44,7 +65,8 @@ class ArticleController extends Controller
         if ($article->author_id !== Auth::id()) {
             abort(403);
         }
-        return view('articles.edit', compact('article'));
+        $categories = Category::all();
+        return view('articles.edit', compact('article', 'categories'));
     }
 
     public function update(Request $request, Article $article)
@@ -56,13 +78,19 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'status' => 'required|in:draft,published',
+            'category_ids' => 'array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
 
         $article->update([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'content' => $request->content,
+            'status' => $request->status,
         ]);
+
+        $article->categories()->sync($request->input('category_ids', []));
 
         return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
     }

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Category;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,5 +22,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        Category::create(['name' => 'Technology', 'slug' => 'technology']);
+        Category::create(['name' => 'Health', 'slug' => 'health']);
+        Category::create(['name' => 'Science', 'slug' => 'science']);
+        Category::create(['name' => 'Lifestyle', 'slug' => 'lifestyle']);
     }
 }

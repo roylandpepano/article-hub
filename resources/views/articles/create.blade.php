@@ -15,6 +15,32 @@
             @enderror
         </div>
 
+        <div class="mb-4">
+            <label for="category_ids" class="block text-gray-700 font-bold mb-2">Categories</label>
+            <select name="category_ids[]" id="category_ids" multiple class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500 h-32">
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ in_array($category->id, old('category_ids', [])) ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+            <p class="text-gray-500 text-xs mt-1">Hold Ctrl (Windows) or Command (Mac) to select multiple categories.</p>
+            @error('category_ids')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="mb-4">
+            <label for="status" class="block text-gray-700 font-bold mb-2">Status</label>
+            <select name="status" id="status" class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500">
+                <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
+            </select>
+            @error('status')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
         <div class="mb-6">
             <label for="content" class="block text-gray-700 font-bold mb-2">Content</label>
             <textarea name="content" id="content" rows="10" class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500" required>{{ old('content') }}</textarea>

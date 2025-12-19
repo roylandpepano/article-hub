@@ -14,6 +14,7 @@
                 <div>
                     @auth
                         <span class="text-gray-600 mr-4">Welcome, {{ auth()->user()->name }}</span>
+                        <a href="{{ route('articles.my_articles') }}" class="text-gray-600 hover:text-gray-800 mr-4">My Articles</a>
                         <a href="{{ route('articles.create') }}" class="text-blue-600 hover:text-blue-800 mr-4">Create Article</a>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
@@ -38,7 +39,7 @@
                 iziToast.success({
                     title: 'Success',
                     message: "{{ session('success') }}",
-                    position: 'topRight'
+                    position: 'topCenter'
                 });
             @endif
 
@@ -46,7 +47,7 @@
                 iziToast.error({
                     title: 'Error',
                     message: "{{ session('error') }}",
-                    position: 'topRight'
+                    position: 'topCenter'
                 });
             @endif
 
@@ -54,7 +55,7 @@
                 iziToast.info({
                     title: 'Info',
                     message: "{{ session('info') }}",
-                    position: 'topRight'
+                    position: 'topCenter'
                 });
             @endif
 
@@ -62,7 +63,7 @@
                 iziToast.warning({
                     title: 'Warning',
                     message: "{{ session('warning') }}",
-                    position: 'topRight'
+                    position: 'topCenter'
                 });
             @endif
 
@@ -71,7 +72,7 @@
                     iziToast.error({
                         title: 'Error',
                         message: "{{ $error }}",
-                        position: 'topRight'
+                        position: 'topCenter'
                     });
                 @endforeach
             @endif

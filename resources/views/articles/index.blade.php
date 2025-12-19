@@ -13,11 +13,21 @@
         @foreach($articles as $article)
             <div class="border-b pb-4 last:border-b-0">
                 <h2 class="text-2xl font-semibold mb-2">{{ $article->title }}</h2>
-                <p class="text-gray-600 mb-2">By {{ $article->author->name }} on {{ $article->created_at->format('M d, Y') }}</p>
+                <div class="text-gray-600 mb-2 flex flex-wrap items-center gap-2">
+                    <span>By {{ $article->author->name }} on {{ $article->created_at->format('M d, Y') }}</span>
+                    @if($article->categories->count() > 0)
+                        <span>&bull;</span>
+                        <div class="flex gap-1">
+                            @foreach($article->categories as $category)
+                                <a href="{{ route('categories.show', $category) }}" class="bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs hover:bg-gray-300">{{ $category->name }}</a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
                 <p class="text-gray-800 mb-4">{{ Str::limit($article->content, 150) }}</p>
 
                 <div class="flex items-center gap-4">
-                    {{-- <a href="{{ route('articles.show', $article) }}" class="text-blue-600 hover:underline">Read more</a> --}}
+                    <a href="{{ route('articles.show', $article) }}" class="text-blue-600 hover:underline">Read more</a>
 
                     @auth
                         @if(auth()->id() === $article->author_id)
