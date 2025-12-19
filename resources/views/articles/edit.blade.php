@@ -1,58 +1,62 @@
 @extends('layout.app')
 
 @section('content')
-<div class="max-w-2xl mx-auto bg-white p-8 rounded shadow">
-    <h2 class="text-2xl font-bold mb-6">Edit Article</h2>
+<div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+    <h2 class="text-xl font-bold text-slate-800 mb-6 tracking-tight">Edit Article</h2>
 
-    <form action="{{ route('articles.update', $article) }}" method="POST">
+    <form action="{{ route('articles.update', $article) }}" method="POST" class="space-y-5">
         @csrf
         @method('PUT')
 
-        <div class="mb-4">
-            <label for="title" class="block text-gray-700 font-bold mb-2">Title</label>
-            <input type="text" name="title" id="title" class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500" value="{{ old('title', $article->title) }}" required>
+        <div>
+            <label for="title" class="block text-xs font-medium text-slate-700 mb-1">Title</label>
+            <input type="text" name="title" id="title" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-colors" value="{{ old('title', $article->title) }}" required placeholder="Enter article title">
             @error('title')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p class="text-rose-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
 
-        <div class="mb-4">
-            <label for="category_ids" class="block text-gray-700 font-bold mb-2">Categories</label>
-            <select name="category_ids[]" id="category_ids" multiple class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500 h-32">
+        <div>
+            <label for="category_ids" class="block text-xs font-medium text-slate-700 mb-1">Categories</label>
+            <select name="category_ids[]" id="category_ids" multiple class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-colors h-32">
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ in_array($category->id, old('category_ids', $article->categories->pluck('id')->toArray())) ? 'selected' : '' }}>
                         {{ $category->name }}
                     </option>
                 @endforeach
             </select>
-            <p class="text-gray-500 text-xs mt-1">Hold Ctrl (Windows) or Command (Mac) to select multiple categories.</p>
+            <p class="text-slate-400 text-[10px] mt-1">Hold Ctrl (Windows) or Command (Mac) to select multiple categories.</p>
             @error('category_ids')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p class="text-rose-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
 
-        <div class="mb-4">
-            <label for="status" class="block text-gray-700 font-bold mb-2">Status</label>
-            <select name="status" id="status" class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500">
+        <div>
+            <label for="status" class="block text-xs font-medium text-slate-700 mb-1">Status</label>
+            <select name="status" id="status" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-colors">
                 <option value="draft" {{ old('status', $article->status) == 'draft' ? 'selected' : '' }}>Draft</option>
                 <option value="published" {{ old('status', $article->status) == 'published' ? 'selected' : '' }}>Published</option>
             </select>
             @error('status')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p class="text-rose-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
 
-        <div class="mb-6">
-            <label for="content" class="block text-gray-700 font-bold mb-2">Content</label>
-            <textarea name="content" id="content" rows="10" class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500" required>{{ old('content', $article->content) }}</textarea>
+        <div>
+            <label for="content" class="block text-xs font-medium text-slate-700 mb-1">Content</label>
+            <textarea name="content" id="content" rows="10" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-colors placeholder:text-slate-400" required placeholder="Write your article content here...">{{ old('content', $article->content) }}</textarea>
             @error('content')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p class="text-rose-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
 
-        <div class="flex justify-end">
-            <a href="{{ route('articles.index') }}" class="text-gray-600 mr-4 py-2">Cancel</a>
-            <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Update Article</button>
+        <div class="flex justify-end items-center gap-3 pt-4">
+            <a href="{{ route('articles.index') }}" class="text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors">
+                <i class="fa-solid fa-xmark mr-1"></i> Cancel
+            </a>
+            <button type="submit" class="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-100 transition-colors text-xs font-medium">
+                <i class="fa-solid fa-check mr-1"></i> Update Article
+            </button>
         </div>
     </form>
 </div>

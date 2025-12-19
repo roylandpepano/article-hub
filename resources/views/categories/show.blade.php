@@ -1,33 +1,44 @@
 @extends('layout.app')
 
 @section('content')
-<div class="bg-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Category: {{ $category->name }}</h1>
-        <a href="{{ route('articles.index') }}" class="text-blue-500 hover:underline">Back to Articles</a>
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Category: <span class="text-indigo-600">{{ $category->name }}</span></h1>
+        <a href="{{ route('articles.index') }}" class="text-xs font-medium text-slate-500 hover:text-indigo-600 transition-colors flex items-center gap-1">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Back to Articles
+        </a>
     </div>
 
-    @if($articles->count() > 0)
-        <div class="space-y-6">
-            @foreach($articles as $article)
-                <div class="border-b pb-4 last:border-b-0 last:pb-0">
-                    <h2 class="text-2xl font-semibold mb-2">
-                        <a href="{{ route('articles.show', $article) }}" class="hover:text-blue-600">
-                            {{ $article->title }}
-                        </a>
+    <div class="grid gap-4">
+        @foreach($articles as $article)
+            <article class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-2">
+                    <h2 class="text-lg font-semibold text-slate-800 leading-tight">
+                        <a href="{{ route('articles.show', $article) }}" class="hover:text-indigo-600 transition-colors">{{ $article->title }}</a>
                     </h2>
-                    <div class="text-gray-600 text-sm mb-2">
-                        By {{ $article->author->name }} | {{ $article->created_at->format('M d, Y') }}
-                    </div>
-                    <p class="text-gray-700 mb-4">
-                        {{ Str::limit($article->content, 150) }}
-                    </p>
-                    <a href="{{ route('articles.show', $article) }}" class="text-blue-500 hover:underline">Read more</a>
                 </div>
-            @endforeach
-        </div>
-    @else
-        <p class="text-gray-600">No articles found in this category.</p>
-    @endif
+
+                <div class="text-xs text-slate-400 mb-3 flex items-center gap-2">
+                    <span>{{ $article->author->name }}</span>
+                    <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                    <span>{{ $article->created_at->format('M d, Y') }}</span>
+                </div>
+
+                <p class="text-slate-600 mb-4 text-sm leading-relaxed line-clamp-2">{{ Str::limit($article->content, 150) }}</p>
+
+                <div class="flex items-center justify-between pt-4 border-t border-slate-50">
+                    <a href="{{ route('articles.show', $article) }}" class="text-xs font-medium text-indigo-500 hover:text-indigo-600 transition-colors flex items-center gap-1">
+                        <i class="fa-solid fa-book-open mr-1"></i> Read article
+                    </a>
+                </div>
+            </article>
+        @endforeach
+
+        @if($articles->isEmpty())
+            <div class="text-center py-12 bg-white rounded-xl border border-slate-100 border-dashed">
+                <p class="text-slate-400 text-sm">No articles found in this category.</p>
+            </div>
+        @endif
+    </div>
 </div>
 @endsection
